@@ -1,0 +1,15 @@
+venv/
+.env
+
+__pycache__/
+*.pyc
+
+database/phishing.db
+
+reports/
+uploads/
+
+.idea/
+.vscode/
+
+*.log

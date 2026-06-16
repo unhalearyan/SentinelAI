@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>SentinelAI - Threat Detection Platform</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🛡️ SentinelAI
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Analyzer</a>
+
+            <a href="/dashboard">Dashboard</a>
+
+        </div>
+
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            AI-Powered Threat Detection Platform
+        </h1>
+
+        <p>
+            Detect phishing emails, assess cyber risks,
+            generate AI-powered threat intelligence reports,
+            and monitor attack trends.
+        </p>
+
+    </section>
+
+    <!-- ANALYZER CARD -->
+
+    <div class="main-card">
+
+        <h2>Email Threat Analyzer</h2>
+
+        <form
+            action="/predict"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <textarea
+                name="email"
+                placeholder="Paste email content here..."
+                required></textarea>
+
+            <div id="char-count">
+                0 characters
+            </div>
+
+            <br>
+
+            <input
+                type="file"
+                name="email_file"
+                accept=".txt,.eml">
+
+            <br><br>
+
+            <button
+                type="submit"
+                id="analyze-btn">
+
+                Analyze Threat
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- RESULTS -->
+
+    {% if prediction %}
+
+    <div class="results-section">
+
+        <div class="result-card">
+
+            <h2 class="{{ result_class }}">
+                {{ prediction }}
+            </h2>
+
+            <!-- METRIC CARDS -->
+
+            <div class="metrics-grid">
+
+                <div class="metric-card">
+
+                    <h3>Confidence</h3>
+
+                    <p>{{ confidence }}%</p>
+
+                </div>
+
+                <div class="metric-card">
+
+                    <h3>Risk Score</h3>
+
+                    <p>{{ risk_score }}/100</p>
+
+                </div>
+
+                <div class="metric-card">
+
+                    <h3>Risk Level</h3>
+
+                    <p>{{ risk_level }}</p>
+
+                </div>
+
+            </div>
+
+            <!-- RISK BAR -->
+
+            <h3>Threat Severity</h3>
+
+            <div class="risk-container">
+
+                <div
+                    class="risk-bar"
+                    data-score="{{ risk_score }}">
+                </div>
+
+            </div>
+
+            <!-- PROBABILITIES -->
+
+            <div class="metrics-grid">
+
+                <div class="metric-card">
+
+                    <h3>Safe Probability</h3>
+
+                    <p>{{ safe_prob }}%</p>
+
+                </div>
+
+                <div class="metric-card">
+
+                    <h3>Phishing Probability</h3>
+
+                    <p>{{ phishing_prob }}%</p>
+
+                </div>
+
+            </div>
+
+            <!-- THREAT INDICATORS -->
+
+            <h3>Threat Indicators</h3>
+
+            <div class="threat-badges">
+
+                {% if threats %}
+
+                    {% for threat in threats %}
+
+                        <span class="badge">
+
+                            {{ threat }}
+
+                        </span>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <span class="badge-safe">
+                        No suspicious indicators detected
+                    </span>
+
+                {% endif %}
+
+            </div>
+            
+            <h3>URLs Found</h3>
+
+{% if urls_found %}
+
+<div class="analysis-card">
+
+    <ul>
+
+        {% for url in urls_found %}
+
+        <li>
+
+            ⚠ {{ url }}
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+{% else %}
+
+<div class="analysis-card">
+
+    No URLs detected.
+
+</div>
+
+{% endif %}
+            <!-- AI ANALYSIS -->
+
+            <div class="analysis-card">
+
+                <h3>AI Security Analysis</h3>
+
+                <button
+                    type="button"
+                    onclick="copyAnalysis()">
+
+                    Copy Analysis
+
+                </button>
+
+                <br><br>
+
+                <pre>{{ analysis }}</pre>
+
+            </div>
+
+            <!-- PDF BUTTON -->
+
+            <a href="/generate_report">
+
+                <button
+                    class="pdf-btn"
+                    type="button">
+
+                    Download PDF Report
+
+                </button>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
